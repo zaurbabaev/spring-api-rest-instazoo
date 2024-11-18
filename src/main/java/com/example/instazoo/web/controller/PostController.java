@@ -2,6 +2,7 @@ package com.example.instazoo.web.controller;
 
 import com.example.instazoo.dto.PostDTO;
 import com.example.instazoo.entity.Post;
+import com.example.instazoo.entity.User;
 import com.example.instazoo.payload.response.MessageResponse;
 import com.example.instazoo.services.PostService;
 import com.example.instazoo.services.UserService;
@@ -38,9 +39,14 @@ public class PostController {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
+        User user = userService.getCurrentUser(principal);
         postDTO.setId(null);
         Post post = postService.createPost(postDTO, principal);
+
         PostDTO createdPost = postMapper.toDto(post);
+
+        // postDto daxilində user yoxdur username var ona görədə mapper-dən sonra username ayrıca set edildi.
+        createdPost.setUsername(user.getUsername());
 
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }

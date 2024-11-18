@@ -4,10 +4,10 @@ import com.example.instazoo.dto.PostDTO;
 import com.example.instazoo.entity.ImageModel;
 import com.example.instazoo.entity.Post;
 import com.example.instazoo.entity.User;
+import com.example.instazoo.exceptions.ImageNotFoundException;
 import com.example.instazoo.exceptions.PostNotFoundException;
 import com.example.instazoo.repository.ImageRepository;
 import com.example.instazoo.repository.PostRepository;
-import com.example.instazoo.web.mappers.PostMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,9 +73,10 @@ public class PostService {
 
     public void deletePost(Long postId, Principal principal) {
         Post post = getPostById(postId, principal);
-        Optional<ImageModel> imageModel = imageRepository.findByPostId(post.getId());
+        ImageModel imageModel = imageRepository.findByPostId(post.getId())
+                .orElseThrow(() -> new ImageNotFoundException("Image cannot be found"));
         postRepository.delete(post);
-        imageModel.ifPresent(imageRepository::delete);
+        imageRepository.delete(imageModel);
     }
 
 

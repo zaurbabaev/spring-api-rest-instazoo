@@ -56,6 +56,7 @@ public class ImageUpdateService {
                 .collect(toSinglePostCollector());
         ImageModel imageModel = new ImageModel();
         imageModel.setPostId(post.getId());
+        imageModel.setUserId(user.getId());
         imageModel.setImageBytes(compressBytes(file.getBytes()));
         imageModel.setName(file.getOriginalFilename());
         LOG.info("Uploading image to Post {}", post.getId());

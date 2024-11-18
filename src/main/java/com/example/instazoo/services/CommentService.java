@@ -4,6 +4,7 @@ import com.example.instazoo.dto.CommentDTO;
 import com.example.instazoo.entity.Comment;
 import com.example.instazoo.entity.Post;
 import com.example.instazoo.entity.User;
+import com.example.instazoo.exceptions.CommentNotFoundException;
 import com.example.instazoo.exceptions.PostNotFoundException;
 import com.example.instazoo.repository.CommentRepository;
 import com.example.instazoo.repository.PostRepository;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +47,10 @@ public class CommentService {
     }
 
     public void deleteComment(Long commentId) {
-        Optional<Comment> comment = commentRepository.findById(commentId);
-        comment.ifPresent(commentRepository::delete);
+//        Optional<Comment> comment = commentRepository.findById(commentId); bundan istidadə etdikdə id olmasada exception atmayacaq
+//        comment.ifPresent(commentRepository::delete);
+        commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found with ID: " + commentId));
+        commentRepository.deleteById(commentId);
     }
 }

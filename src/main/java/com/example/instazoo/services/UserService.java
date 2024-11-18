@@ -4,13 +4,13 @@ import com.example.instazoo.dto.UserDTO;
 import com.example.instazoo.entity.User;
 import com.example.instazoo.entity.enums.ERole;
 import com.example.instazoo.exceptions.UserExistException;
+import com.example.instazoo.exceptions.UsernameNotFoundException;
 import com.example.instazoo.payload.request.SignUpRequest;
 import com.example.instazoo.repository.UserRepository;
 import com.example.instazoo.web.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
