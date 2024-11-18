@@ -8,6 +8,8 @@ import com.example.instazoo.services.PostService;
 import com.example.instazoo.services.UserService;
 import com.example.instazoo.validations.ResponseErrorValidation;
 import com.example.instazoo.web.mappers.PostMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin
 @RequestMapping("/api/posts")
+@Tag(name = "Post Controller", description = "Post API")
 public class PostController {
 
     private final PostService postService;
@@ -32,6 +35,7 @@ public class PostController {
 
 
     @PostMapping("/create")
+    @Operation(summary = "With this method we CREATE new POST")
     public ResponseEntity<Object> createPost(@Valid @RequestBody PostDTO postDTO,
                                              BindingResult bindingResult,
                                              Principal principal) {
@@ -52,6 +56,7 @@ public class PostController {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "With this method we GET ALL POSTS and ORDER it by CREATE DATE (DESC)")
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         List<Post> postList = postService.getAllPosts();
         List<PostDTO> postDTOList = postMapper.toDto(postList);
@@ -60,6 +65,7 @@ public class PostController {
     }
 
     @GetMapping("/user/posts")
+    @Operation(summary = "With this method we GET ALL POSTS OF USERS and ORDER it by CREATE DATE (DESC)")
     public ResponseEntity<List<PostDTO>> getAllPostsForUser(Principal principal) {
         List<Post> allPostForUser = postService.getAllPostForUser(principal);
         List<PostDTO> postDTOList = postMapper.toDto(allPostForUser);
@@ -68,15 +74,20 @@ public class PostController {
     }
 
     @PostMapping("{postId}/{username}/like")
+    @Operation(summary = "With this method we like any POST use postId and username")
     public ResponseEntity<PostDTO> likePost(@PathVariable("postId") String postId,
                                             @PathVariable("username") String username) {
         Post post = postService.likePost(Long.parseLong(postId), username);
         PostDTO postDTO = postMapper.toDto(post);
 
+        // postDTO daxilində user yoxdur username var ona görə postdan useri onuda daxilində usernameni götürük
+        postDTO.setUsername(post.getUser().getUsername());
+
         return new ResponseEntity<>(postDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{postId}")
+    @Operation(summary = "With this method we DELETE POST by ID")
     public ResponseEntity<MessageResponse> deletePost(@PathVariable("postId") String postId,
                                                       Principal principal) {
         postService.deletePost(Long.parseLong(postId), principal);

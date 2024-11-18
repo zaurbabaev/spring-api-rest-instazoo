@@ -3,6 +3,8 @@ package com.example.instazoo.web.controller;
 import com.example.instazoo.entity.ImageModel;
 import com.example.instazoo.payload.response.MessageResponse;
 import com.example.instazoo.services.ImageUpdateService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +18,13 @@ import java.security.Principal;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/api/images")
+@Tag(name = "Image Upload Controller", description = "Image Upload API")
 public class ImageUploadController {
 
     private final ImageUpdateService imageUpdateService;
 
     @PostMapping("/upload")
+    @Operation(summary = "With this method we UPLOAD USERS image")
     public ResponseEntity<MessageResponse> uploadImageToUser(@RequestParam("file") MultipartFile file,
                                                              Principal principal) throws IOException {
         imageUpdateService.uploadImageToUser(file, principal);
@@ -29,6 +33,7 @@ public class ImageUploadController {
     }
 
     @PostMapping("/{postId}/upload")
+    @Operation(summary = "With this method we UPLOAD image for the POST (use postId)")
     public ResponseEntity<MessageResponse> uploadImageToPost(@RequestParam("file") MultipartFile file,
                                                              @PathVariable("postId") String postId,
                                                              Principal principal) throws IOException {
@@ -38,6 +43,7 @@ public class ImageUploadController {
     }
 
     @GetMapping("/profileImage")
+    @Operation(summary = "With this method we get PROFILE IMAGE for the USER")
     public ResponseEntity<ImageModel> getImageToUser(Principal principal) {
         ImageModel userImage = imageUpdateService.getImageToUser(principal);
 
@@ -45,6 +51,7 @@ public class ImageUploadController {
     }
 
     @GetMapping("/{postId}/image")
+    @Operation(summary = "With this method we get IMAGE for POST (use postId)")
     public ResponseEntity<ImageModel> getImageToPost(@PathVariable("postId") String postId) {
         ImageModel postImage = imageUpdateService.getImageToPost(Long.parseLong(postId));
 

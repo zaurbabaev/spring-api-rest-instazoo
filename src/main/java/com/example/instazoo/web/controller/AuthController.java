@@ -8,6 +8,8 @@ import com.example.instazoo.security.JWTTokenProvider;
 import com.example.instazoo.security.SecurityConstants;
 import com.example.instazoo.services.UserService;
 import com.example.instazoo.validations.ResponseErrorValidation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @PreAuthorize("permitAll()")
+@Tag(name = "Auth Controller", description = "Auth API")
 public class AuthController {
 
     private final ResponseErrorValidation responseErrorValidation;
@@ -35,6 +38,7 @@ public class AuthController {
 
 
     @PostMapping("/signin")
+    @Operation(summary = "With this method we AUTHENTICATION")
     public ResponseEntity<Object> authentication(@Valid @RequestBody LoginRequest loginRequest,
                                                  BindingResult bindingResult) {
 
@@ -52,6 +56,7 @@ public class AuthController {
 
 
     @PostMapping("/signup")
+    @Operation(summary = "With this method we CREATE new User")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody SignUpRequest signUpRequest,
                                                BindingResult bindingResult) {
 

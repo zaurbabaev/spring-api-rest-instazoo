@@ -5,6 +5,8 @@ import com.example.instazoo.entity.User;
 import com.example.instazoo.services.UserService;
 import com.example.instazoo.validations.ResponseErrorValidation;
 import com.example.instazoo.web.mappers.UserMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @CrossOrigin
 @RequestMapping("/api/users")
+@Tag(name = "User Controller", description = "User API")
 public class UserController {
 
     private final UserService userService;
@@ -26,6 +29,7 @@ public class UserController {
     private final ResponseErrorValidation responseErrorValidation;
 
     @GetMapping
+    @Operation(summary = "With this method we GET CURRENT USER")
     public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
         User user = userService.getCurrentUser(principal);
         UserDTO userDTO = userMapper.toDto(user);
@@ -34,6 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    @Operation(summary = "With this method we Get USER PROFILE")
     public ResponseEntity<UserDTO> getUserProfile(@PathVariable("userId") String userId) {
         User user = userService.getUserById(Long.parseLong(userId));
         UserDTO userDTO = userMapper.toDto(user);
@@ -42,6 +47,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
+    @Operation(summary = "With this method we UPDATED USERS information")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO,
                                              BindingResult bindingResult,
                                              Principal principal) {

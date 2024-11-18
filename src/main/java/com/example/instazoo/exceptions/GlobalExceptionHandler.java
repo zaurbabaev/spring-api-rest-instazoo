@@ -32,5 +32,11 @@ public class GlobalExceptionHandler {
         return new ExceptionBody(ex.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserExistException.class)
+    public ExceptionBody handleUserExist(UserExistException ex) {
+        return new ExceptionBody(ex.getMessage());
+    }
+
 
 }
